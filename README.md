@@ -1,8 +1,7 @@
-# E-commerce Intent Classification Chatbot (BERT)
+# Chatbot-Intent-Recognition-using-BERT
 
-Chatbot-Intent-Recognition-using-BERT
 This project showcases how BERT (Bidirectional Encoder Representations from Transformers) can be fine-tuned for accurately identifying customer intent from text queries. It's designed to assist customer service bots in understanding user requests like "Where is my order?" or "I want to cancel my subscription".
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 🧠 Key Features
 
 Uses bert-base-uncased from Hugging Face for intent classification.
@@ -14,7 +13,8 @@ Handles common customer intents such as tracking orders, resetting passwords, or
 Trained on a labeled dataset easy fine-tuning and evaluation.
 
 Temporarily deployed using Gradio
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 📁 Project Files
 
 bert_model_final.ipynb – Full notebook with training, prediction, and model-saving code.
@@ -22,7 +22,7 @@ bert_model_final.ipynb – Full notebook with training, prediction, and model-sa
 dataset.csv – Contains labeled customer service queries.
 
 README.md – Project overview and instructions (this file).
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 📊 Dataset
 
 The dataset consists of 8175 customer support queries labeled with specific intent categories such as Track_Order, Cancel_Subscription, Reset_Password, Speak_to_Agent, and more. Each row contains a natural language query and its corresponding intent label.Unnecessary cloumns are further dropped. The data is used in a supervised learning setup to fine-tune the BERT model for intent classification. It reflects real-world variations in phrasing, spelling, and grammar, helping the model generalize better to actual user messages.
@@ -43,6 +43,7 @@ Speak_to_Agent
 
 and 23 more...
 
+
 🎯 Project Outcome
 
 This project demonstrates how modern NLP models like BERT outperform traditional methods in understanding user intent, particularly in dynamic and informal communication settings. It serves as a foundation for intelligent chatbot systems.
@@ -55,5 +56,5 @@ Deploy the model via an API for real-time inference.
 
 Expand the dataset with more diverse queries.
 
-💫Thankyou for visitng our project
 
+💫Thankyou for visitng our project
