@@ -1,49 +1,59 @@
 # E-commerce Intent Classification Chatbot (BERT)
 
-A BERT-powered chatbot that understands and classifies **27 distinct customer intents** in real time to provide accurate automated responses.
+Chatbot-Intent-Recognition-using-BERT
+This project showcases how BERT (Bidirectional Encoder Representations from Transformers) can be fine-tuned for accurately identifying customer intent from text queries. It's designed to assist customer service bots in understanding user requests like "Where is my order?" or "I want to cancel my subscription".
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+🧠 Key Features
 
----
+Uses bert-base-uncased from Hugging Face for intent classification.
 
-## 🎯 Project Overview
+Tokenizes input using BERT’s WordPiece tokenizer.
 
-Customers frequently ask things like “Where’s my order?”, “How do I return this?”, or “Is this available in red?”. This project categorizes such queries into **27 specific e-commerce intents**, enabling fast, intent-aware chatbot replies.
+Handles common customer intents such as tracking orders, resetting passwords, or speaking to a human.
 
----
+Trained on a labeled dataset easy fine-tuning and evaluation.
 
-## 💡 Intent Categories (27 total)
+Temporarily deployed using Gradio
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+📁 Project Files
 
-1. **OrderStatus** – “Where’s my order?”  
-2. **ReturnRequest** – “I want to return this.”  
-3. **RefundStatus** – “When will I get my refund?”  
-4. **CancelOrder** – “Cancel my order please.”  
-5. **ProductSearch** – “Find me running shoes.”  
-6. **ProductInfo** – “Tell me dimensions/specs.”  
-7. **ProductAvailability** – “Is this in stock?”  
-8. **PriceInquiry** – “How much does this cost?”  
-9. **DiscountInquiry** – “Are there any discounts/offers?”  
-10. **ShippingCost** – “What’s the delivery charge?”  
-11. **ShippingTime** – “When will it arrive?”  
-12. **TrackShipment** – “I want my tracking link.”  
-13. **ExchangeRequest** – “Can I exchange this?”  
-14. **SizeIssue** – “This size doesn’t fit.”  
-15. **LoginIssues** – “I can’t log in.”  
-16. **AccountUpdate** – “How do I change my email?”  
-17. **PasswordReset** – “I forgot my password.”  
-18. **PaymentIssue** – “My card got declined.”  
-19. **InvoiceRequest** – “Send me the invoice.”  
-20. **CancelSubscription** – “Cancel my membership.”  
-21. **GiftWrapRequest** – “Add gift wrapping.”  
-22. **ReviewSubmission** – “I want to leave a review.”  
-23. **StoreLocator** – “Where is your store?”  
-24. **PromotionalQuery** – “Show me sale items.”  
-25. **SupportRequest** – “I have an issue.”  
-26. **Feedback** – “Your app is great!”  
-27. **Other** – Any uncategorized/ambiguous queries
+bert_model_final.ipynb – Full notebook with training, prediction, and model-saving code.
 
----
+dataset.csv – Contains labeled customer service queries.
 
-## 🧰 Dataset
+README.md – Project overview and instructions (this file).
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+📊 Dataset
 
-- **Source**: Real customer queries from an e-commerce platform  
-- **Labels**: 27 intent categories as above  
+The dataset consists of 8175 customer support queries labeled with specific intent categories such as Track_Order, Cancel_Subscription, Reset_Password, Speak_to_Agent, and more. Each row contains a natural language query and its corresponding intent label.Unnecessary cloumns are further dropped. The data is used in a supervised learning setup to fine-tune the BERT model for intent classification. It reflects real-world variations in phrasing, spelling, and grammar, helping the model generalize better to actual user messages.
+
+🚀 What It Does
+
+The model classifies input text into intent categories by learning contextual embeddings using BERT. It's capable of understanding variations in phrasing, slang, and grammar, making it suitable for real-world usage in chatbots and automated helpdesks.
+
+📌 Example Intents
+
+Track_Order
+
+Cancel_Subscription
+
+Reset_Password
+
+Speak_to_Agent
+
+and 23 more...
+
+🎯 Project Outcome
+
+This project demonstrates how modern NLP models like BERT outperform traditional methods in understanding user intent, particularly in dynamic and informal communication settings. It serves as a foundation for intelligent chatbot systems.
+
+⚙ Future Enhancements
+
+Integrate a permanent chatbot interface.
+
+Deploy the model via an API for real-time inference.
+
+Expand the dataset with more diverse queries.
+
+💫Thankyou for visitng our project
 
