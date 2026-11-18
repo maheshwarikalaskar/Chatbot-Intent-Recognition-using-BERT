@@ -1,31 +1,23 @@
 # E-commerce Intent Recognition with BERT
 
-Fine-tuned `bert-base-uncased` that classifies customer-support queries into 27 intents, wrapped in a Gradio chatbot with a confidence threshold and fallback.
+Fine-tuned `bert-base-uncased` that classifies customer-support queries into 27 intents, wrapped in a Gradio chatbot with a confidence threshold and a fallback reply.
 
-**Live demo:** _add your Hugging Face Spaces link here_ · **Model:** _add your Hugging Face Hub model link here_
+## What it does
 
-![Demo screenshot](assets/demo.png)
+A user types a message such as "Where is my order?" and the model predicts the intent (`track_order`). The app replies with a templated answer, shows the top 3 predicted intents with scores, and asks the user to rephrase when the model is not confident enough.
 
-## Results
+## Evaluation
 
-Evaluated on a held-out, stratified test set that the model never saw during training or model selection (80/10/10 train/validation/test split, `seed=42`). Run `notebooks/Model_Training.ipynb` and paste its output here.
+`Model Training.ipynb` trains and evaluates the model end to end. When you run it, it:
 
-| Metric | Value |
-|---|---|
-| Test accuracy | _fill in_ |
-| Test macro-F1 | _fill in_ |
-| Test queries | _fill in_ |
-| Test queries with a near-duplicate in train (cosine ≥ 0.9) | _fill in_ |
-
-Confidence threshold trade-off on the test set (the app uses a threshold to avoid answering queries it is unsure about):
-
-| Threshold | Share of queries answered | Accuracy on answered |
-|---|---|---|
-| 0.5 | _fill in_ | _fill in_ |
-| 0.7 | _fill in_ | _fill in_ |
-| 0.9 | _fill in_ | _fill in_ |
-
-Most-confused intent pairs and misclassified examples are in the notebook's error-analysis section.
+- removes duplicate queries and checks for conflicting labels
+- makes a stratified 80/10/10 train/validation/test split
+- selects the best epoch on validation macro-F1, never on the test set
+- reports test accuracy, macro-F1, a per-intent classification report and a normalised confusion matrix
+- lists the most confused intent pairs and example misclassifications
+- measures how many test queries have a near-duplicate in the training set
+- tabulates accuracy against confidence threshold and probes the model with off-topic queries
+- writes the headline numbers to `metrics.json`
 
 ## Intents
 
@@ -35,61 +27,53 @@ The model predicts one of 27 intents:
 
 ## Dataset
 
-_State the source here._ The CSV's column layout matches the public Bitext customer-support dataset. If that is where it comes from, cite it and check its license. _Report the row count after de-duplication._
+`Customer_Service_Training_Dataset.csv` contains 8,175 customer queries labelled with 27 intents (before de-duplication). Datasets of this kind are often built from templates with paraphrase variation, so scores on them can be higher than on messages typed by real customers. The notebook's near-duplicate check shows how much this matters here.
 
-Queries in datasets like this are often generated from templates with paraphrase variation. Scores on such data show that the pipeline works but are likely higher than on messages typed by real customers. The notebook measures how many test queries have a near-duplicate in the training set so you can see this directly.
+## Run it
 
-## Approach
+**1. Train** (Colab with a GPU runtime is the easiest option): open `Model Training.ipynb`, upload `Customer_Service_Training_Dataset.csv` next to it, and run all cells. This creates a `bert_intent_model/` folder with the model and tokenizer.
 
-1. Clean: drop empty and duplicate queries, check for conflicting labels.
-2. Split: stratified train/validation/test, so every intent appears in each split.
-3. Fine-tune `bert-base-uncased` with the Hugging Face `Trainer`: dynamic padding, best checkpoint selected on validation macro-F1.
-4. Evaluate on the untouched test set: accuracy, macro-F1, per-intent report, confusion matrix, error analysis.
-5. Calibrate: look at accuracy versus confidence and probe with off-topic queries to choose the app's threshold.
-6. Serve: Gradio app that returns a templated reply, shows the top 3 intents with scores, and asks the user to rephrase when confidence is below the threshold.
-
-## Run locally
+**2. Chat:**
 
 ```bash
-git clone https://github.com/maheshwarikalaskar/Chatbot-Intent-Recognition-using-BERT.git
-cd Chatbot-Intent-Recognition-using-BERT
 pip install -r requirements.txt
-
-# Use the published model...
-MODEL_ID=your-username/bert-intent-ecommerce python app.py
-# ...or a local folder produced by the notebook
-MODEL_ID=bert_intent_model python app.py
+python app.py
 ```
 
-Model weights are about 420 MB, so they live on the Hugging Face Hub instead of this repository.
+The app loads `bert_intent_model/` by default. To load a model from the Hugging Face Hub instead, set `MODEL_ID`:
 
-To retrain, open `notebooks/Model_Training.ipynb` in Colab (GPU runtime) or locally and run all cells.
+```bash
+MODEL_ID=your-username/your-model python app.py
+```
 
-## Project structure
+Set `CONFIDENCE_THRESHOLD` (default 0.6) to make the bot more or less willing to answer. The notebook's threshold table shows the trade-off.
+
+Model weights are about 420 MB, so they are not stored in this repository.
+
+## Files
 
 ```
 .
-├── app.py                              # Gradio chatbot
-├── data/Customer_Service_Training_Dataset.csv
-├── notebooks/Model_Training.ipynb      # train + evaluate + save
-├── metrics.json                        # test metrics written by the notebook
+├── Customer_Service_Training_Dataset.csv
+├── Model Training.ipynb    # clean, evaluate, train, save
+├── app.py                  # Gradio chatbot
 ├── requirements.txt
 └── README.md
 ```
 
 ## Limitations
 
-- The bot classifies intent and returns templated replies. It does not connect to orders, accounts or payments, so it never performs any action.
-- One intent per message: no dialogue state, no multi-intent handling, no entity extraction (order numbers, dates).
-- English only. Trained on a closed set of 27 intents, so out-of-scope messages can only be caught by the confidence threshold.
-- Accuracy on real customer messages is unknown until it is tested on real data.
+- The bot classifies intent and returns templated replies. It is not connected to orders, accounts or payments, so it never performs an action.
+- One intent per message. No dialogue state, multi-intent handling or entity extraction (order numbers, dates).
+- English only, and a closed set of 27 intents, so off-topic messages can only be caught by the confidence threshold.
+- Accuracy on real customer messages is unknown until the model is tested on real data.
 
 ## Future work
 
 - Evaluate on real, human-written support messages
 - Add an explicit "out of scope" class
-- Entity extraction (order IDs) and multi-turn dialogue
-- Compare against a smaller distilled model for faster CPU inference
+- Entity extraction and multi-turn dialogue
+- Compare against a distilled model for faster CPU inference
 
 ## Author
 
